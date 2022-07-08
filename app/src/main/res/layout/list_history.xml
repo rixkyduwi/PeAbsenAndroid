@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingStart="8sp"
+    android:paddingEnd="8sp"
+    android:paddingHorizontal="100sp"
+    android:gravity="center"
+    android:layout_marginBottom="10dp"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="08/07/2022"
+        android:fontFamily="@font/popins"
+        android:textColor="@color/black"
+        android:layout_marginEnd="30dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="08:00"
+        android:fontFamily="@font/popins"
+        android:textColor="@color/black"
+        android:layout_marginEnd="30dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/greenlight"
+        android:text="Tidak Telat"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/popins"/>
+</LinearLayout>
