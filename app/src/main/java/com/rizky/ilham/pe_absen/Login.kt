@@ -17,9 +17,8 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class Login : AppCompatActivity() {
-    private val url = "http://10.0.49.16:5001"
+    private val url = "http://10.0.50.231:5001"
     private val POST = "POST"
-    private val PUT = "PUT"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_login)

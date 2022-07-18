@@ -1,15 +1,13 @@
 package com.rizky.ilham.pe_absen.ui.absen
 
 import android.Manifest
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.app.Activity
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
 import android.webkit.MimeTypeMap
@@ -20,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.core.content.FileProvider.getUriForFile
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rizky.ilham.pe_absen.R
@@ -29,8 +29,10 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import org.json.JSONObject
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
+import java.security.AccessController.getContext
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
@@ -45,11 +47,14 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
-    private val url = "http://10.0.49.16:5001"
+    private val url = "http://10.0.50.231:5001"
     private val POST = "POST"
     lateinit var photo: Bitmap
+    lateinit var photoFile: File
     lateinit var image_uri: Uri
-    lateinit var sourcefile: File
+    val REQUEST_TAKE_PHOTO = 1
+    val REQUEST_IMAGE_CAPTURE = 1
+    lateinit var currentPhotoPath: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
@@ -63,11 +68,12 @@ class CameraActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         val nip = intent.getStringExtra("nip");
         button.setOnClickListener {
-            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(cameraIntent,cameraRequest)
+            dispatchTakePictureIntent()
             getCurrentLocation()
         }
         btn_kirim.setOnClickListener {
+            val mimeType = photoFile?.let { getMimeType(it) }
+            val fileName: String = photoFile.toString()
             sendRequest(
                 POST,
                 "apiabsen",
@@ -78,15 +84,9 @@ class CameraActivity : AppCompatActivity() {
                 nip,
                 latitude.toString(),
                 longitude.toString(),
-                applicationContext.filesDir.absolutePath.toString() + "/imagename.png"
+                fileName,
+                photoFile!!.asRequestBody(mimeType?.toMediaTypeOrNull())
             )
-            this@CameraActivity.startActivity(
-                Intent(
-                    this@CameraActivity as Context,
-                    AbsenSukses::class.java
-                )
-            )
-            finish()
         }
         executor = ContextCompat.getMainExecutor(this)
         biometricPrompt = BiometricPrompt(this, executor,
@@ -142,12 +142,43 @@ class CameraActivity : AppCompatActivity() {
             biometricPrompt.authenticate(promptInfo)
         }
     }
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == requestCode) {
-            photo = data?.extras?.get("data") as Bitmap
-            sourcefile = data?.extras?.get("data") as File
-            imageView.setImageBitmap(photo)
+    private fun dispatchTakePictureIntent() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                // Create the File where the photo should go
+                photoFile = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    // Error occurred while creating the File
+                    println("Error occurred while creating the File")
+                    return@also
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    val photoURI: Uri = getUriForFile(
+                        this,
+                        "com.example.android.fileprovider",
+                        it
+                    )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
+                }
+            }
+        }
+    }
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
         }
     }
 
@@ -220,7 +251,8 @@ class CameraActivity : AppCompatActivity() {
         value1: String?,
         value2: String?,
         value3: String?,
-        imagevalue: String,
+        imagename: String,
+        imagevalue: RequestBody,
     ) {
         /* if url is of our get request, it should not have parameters according to our implementation.
          * But our post request should have 'name' parameter. */
@@ -231,18 +263,15 @@ class CameraActivity : AppCompatActivity() {
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS).build()
-        val file: File = filesDir
-        val requestFile =RequestBody.create("multipart/form-data".toMediaTypeOrNull(),file)
-        val requestFile2=RequestBody.create("image/*".toMediaTypeOrNull(),file)
-        val body = MultipartBody.Part.createFormData("profile_picture", file.name, requestFile2)
-
         /* If it is a post request, then we have to pass the parameters inside the request body*/request =
             if (method == POST) {
-                val mimeType = getMimeType(sourcefile)
-                val fileName: String = "askda.jpg"
+
                 val requestBody: RequestBody =
                     MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart(image!!, fileName,sourcefile.asRequestBody(mimeType?.toMediaTypeOrNull()))
+                        .addFormDataPart(nip!!, value1.toString())
+                        .addFormDataPart(image!!,imagename,imagevalue)
+                        .addFormDataPart(latitude!!,value2.toString())
+                        .addFormDataPart(longitude!!,value3.toString())
                         .build()
                 Request.Builder()
                     .url(fullURL)

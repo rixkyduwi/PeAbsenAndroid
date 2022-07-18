@@ -42,6 +42,7 @@ class ProfileFragment : Fragment() {
         val alamat: String? = activity?.getalamat()
             binding.profileNip.text = "NIP : "+nip
             binding.profileNama.text = "Nama : "+nama
+            binding.profilePswd.text = "Password : ********"
             binding.profilePosisi.text = "Posisi : "+posisi
             binding.profileGender.text = "Gender : "+gender
             binding.profileTtl.text = "Tanggal Lahir : "+ttl

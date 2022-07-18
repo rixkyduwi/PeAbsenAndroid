@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 class HistoryFragment : Fragment() {
 
     private var _binding: FragmentHistoryBinding? = null
-    private val url = "http://10.0.49.16:5001"
+    private val url = "http://10.0.50.231:5001"
     private val POST = "POST"
     // This property is only valid between onCreateView and
     // onDestroyView.
