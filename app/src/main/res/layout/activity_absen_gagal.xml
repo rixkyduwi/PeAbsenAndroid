@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="ABSEN SUKSES"
+                android:text="ABSEN GAGAL"
                 android:fontFamily="@font/popins"
                 android:textColor="@color/coklatkekuningan"
                 android:textSize="54sp"

@@ -1,20 +1,12 @@
 package com.rizky.ilham.pe_absen
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.navArgument
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rizky.ilham.pe_absen.databinding.ActivityDashboardBinding
-import kotlinx.android.synthetic.main.activity_login.*
-
-
 class Dashboard : AppCompatActivity() {
 
     private lateinit var binding: ActivityDashboardBinding
@@ -28,16 +20,14 @@ class Dashboard : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_dashboard)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
+        AppBarConfiguration(
             setOf(
                 R.id.navigation_history, R.id.navigation_absen, R.id.navigation_profile
             )
         )
         navView.setupWithNavController(navController)
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-    }
+
     fun getnip(): String? {
         val nip = intent.getStringExtra("nip");
         return nip

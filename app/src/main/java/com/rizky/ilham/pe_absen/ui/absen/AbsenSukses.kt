@@ -7,8 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.widget.TextView
 import com.rizky.ilham.pe_absen.Dashboard
 import kotlinx.android.synthetic.main.activity_absen_sukses.*
 
@@ -27,20 +25,20 @@ class AbsenSukses : AppCompatActivity() {
         val no_hp = intent.getStringExtra("no_hp");
         val alamat = intent.getStringExtra("alamat");
         this@AbsenSukses.runOnUiThread { textsukses.text = msg }
-        Handler(Looper.getMainLooper()).postDelayed((Runnable {
-            var i = Intent(
+        Handler(Looper.getMainLooper()).postDelayed({
+            val i = Intent(
                 this@AbsenSukses as Context, Dashboard::class.java
             )
-            i.putExtra("nip",nip)
-            i.putExtra("nama",nama)
-            i.putExtra("posisi",posisi)
-            i.putExtra("gender",gender)
-            i.putExtra("ttl",ttl)
-            i.putExtra("email",email)
-            i.putExtra("no_hp",no_hp)
-            i.putExtra("alamat",alamat)
+            i.putExtra("nip", nip)
+            i.putExtra("nama", nama)
+            i.putExtra("posisi", posisi)
+            i.putExtra("gender", gender)
+            i.putExtra("ttl", ttl)
+            i.putExtra("email", email)
+            i.putExtra("no_hp", no_hp)
+            i.putExtra("alamat", alamat)
             this@AbsenSukses.startActivity(i)
             finish()
-        } as Runnable)!!, 3000L)
+        }, 3000L)
     }
 }

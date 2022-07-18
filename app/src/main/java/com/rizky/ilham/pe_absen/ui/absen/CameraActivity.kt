@@ -44,16 +44,13 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
-    private lateinit var executor: Executor
-    private lateinit var biometricPrompt: BiometricPrompt
-    private lateinit var promptInfo: BiometricPrompt.PromptInfo
+    //private lateinit var executor: Executor
+    //private lateinit var biometricPrompt: BiometricPrompt
+    //private lateinit var promptInfo: BiometricPrompt.PromptInfo
     private val url = "http://10.0.50.231:5001"
     private val POST = "POST"
-    lateinit var photo: Bitmap
     lateinit var photoFile: File
-    lateinit var image_uri: Uri
     val REQUEST_TAKE_PHOTO = 1
-    val REQUEST_IMAGE_CAPTURE = 1
     lateinit var currentPhotoPath: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +60,6 @@ class CameraActivity : AppCompatActivity() {
             == PackageManager.PERMISSION_DENIED)
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), cameraRequest)
         imageView = findViewById(R.id.imageView)
-        val imagevalue: ImageView = imageView
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         val nip = intent.getStringExtra("nip");
         button.setOnClickListener {
@@ -85,9 +80,11 @@ class CameraActivity : AppCompatActivity() {
                 latitude.toString(),
                 longitude.toString(),
                 fileName,
-                photoFile!!.asRequestBody(mimeType?.toMediaTypeOrNull())
+                photoFile.asRequestBody(mimeType?.toMediaTypeOrNull())
             )
         }
+        /**
+         *
         executor = ContextCompat.getMainExecutor(this)
         biometricPrompt = BiometricPrompt(this, executor,
             object : BiometricPrompt.AuthenticationCallback() {
@@ -141,6 +138,7 @@ class CameraActivity : AppCompatActivity() {
         biometricLoginButton.setOnClickListener {
             biometricPrompt.authenticate(promptInfo)
         }
+         */
     }
     private fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
@@ -265,7 +263,6 @@ class CameraActivity : AppCompatActivity() {
             .writeTimeout(10, TimeUnit.SECONDS).build()
         /* If it is a post request, then we have to pass the parameters inside the request body*/request =
             if (method == POST) {
-
                 val requestBody: RequestBody =
                     MultipartBody.Builder().setType(MultipartBody.FORM)
                         .addFormDataPart(nip!!, value1.toString())
@@ -283,14 +280,11 @@ class CameraActivity : AppCompatActivity() {
                     .url(fullURL)
                     .build()
             }
-
         /* this is how the callback get handled */client.newCall(request)
             .enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     e.printStackTrace()
-
                 }
-
                 override fun onResponse(call: Call, response: Response) {
 
                     // Read data on the worker thread
@@ -309,7 +303,7 @@ class CameraActivity : AppCompatActivity() {
                     val alamat: String? = intent.getStringExtra("alamat")
                     if (Jobject["msg"].toString()== "kamu absen tepat waktu") {
 
-                        var i = Intent(
+                        val i = Intent(
                             this@CameraActivity as Context, AbsenSukses::class.java
                         )
                         i.putExtra("msg",Jobject["msg"].toString())
@@ -325,7 +319,7 @@ class CameraActivity : AppCompatActivity() {
                         this@CameraActivity.finish()
                     }
                     else{
-                        var i = Intent(
+                        val i = Intent(
                             this@CameraActivity as Context, AbsenGagal::class.java
                         )
                         i.putExtra("msg",Jobject["msg"].toString())
@@ -343,5 +337,4 @@ class CameraActivity : AppCompatActivity() {
                 }
             })
     }
-
 }

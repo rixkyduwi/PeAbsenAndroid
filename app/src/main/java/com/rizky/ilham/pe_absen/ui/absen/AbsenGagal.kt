@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.rizky.ilham.pe_absen.Dashboard
 import com.rizky.ilham.pe_absen.R
 import kotlinx.android.synthetic.main.activity_absen_gagal.*
-import kotlinx.android.synthetic.main.activity_absen_sukses.*
 
 class AbsenGagal : AppCompatActivity() {
 
@@ -27,7 +26,7 @@ class AbsenGagal : AppCompatActivity() {
         val alamat = intent.getStringExtra("alamat");
         this@AbsenGagal.runOnUiThread { textgagal.text = msg }
         Handler(Looper.getMainLooper()).postDelayed((Runnable {
-            var i = Intent(
+            val i = Intent(
                 this@AbsenGagal as Context, Dashboard::class.java
             )
             i.putExtra("nip",nip)
