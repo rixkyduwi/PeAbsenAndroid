@@ -3,7 +3,10 @@ package com.rizky.ilham.pe_absen
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,12 +17,16 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class Login : AppCompatActivity() {
-    private val url = "http://10.0.50.130:5001"
+    private val url = "http://10.0.49.16:5001"
     private val POST = "POST"
     private val PUT = "PUT"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_login)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
         val register: Button = findViewById<View>(R.id.btnLogin) as Button
         val nip: TextView = findViewById<View>(R.id.nip) as TextView
         val password: TextView = findViewById<View>(R.id.pswd) as TextView
@@ -104,19 +111,18 @@ class Login : AppCompatActivity() {
                         val data = Jobject.getJSONArray("data")
                         val datalogin = JSONObject(data[0].toString())
 
-                        var i = Intent(
-                            this@Login as Context, AbsenSukses::class.java
-                        )
-                        i.putExtra("nip",datalogin["nip"].toString())
-                        i.putExtra("nama",datalogin["nama"].toString())
-                        i.putExtra("posisi",datalogin["posisi"].toString())
-                        i.putExtra("gender",datalogin["gender"].toString())
-                        i.putExtra("ttl",datalogin["ttl"].toString())
-                        i.putExtra("email",datalogin["email"].toString())
-                        i.putExtra("no_hp",datalogin["no_hp"].toString())
-                        i.putExtra("alamat",datalogin["alamat"].toString())
-                        this@Login.startActivity(i)
-                        this@Login.finish()
+                        val intent = Intent(this@Login , LoginSukses::class.java)
+
+                        intent.putExtra("nip",datalogin["nip"].toString())
+                        intent.putExtra("nama",datalogin["nama"].toString())
+                        intent.putExtra("posisi",datalogin["posisi"].toString())
+                        intent.putExtra("gender",datalogin["gender"].toString())
+                        intent.putExtra("ttl",datalogin["ttl"].toString())
+                        intent.putExtra("email",datalogin["email"].toString())
+                        intent.putExtra("no_hp",datalogin["no_hp"].toString())
+                        intent.putExtra("alamat",datalogin["alamat"].toString())
+                        startActivity(intent)
+                        finish()
                     } else {
                             this@Login.runOnUiThread { respon.text =Jobject["msg"].toString()}
                     }

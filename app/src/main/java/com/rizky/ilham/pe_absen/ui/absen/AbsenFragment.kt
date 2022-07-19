@@ -45,10 +45,28 @@ class AbsenFragment : Fragment() {
         absenViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
-        val btnCapture : Button= binding.btnAbsen
 
+        val btnCapture : Button= binding.btnAbsen
+        val activity: Dashboard? = activity as Dashboard?
+        val nip: String? = activity?.getnip()
+        val nama: String? = activity?.getnama()
+        val posisi: String? = activity?.getposisi()
+        val gender: String? = activity?.getgender()
+        val ttl: String? = activity?.getttl()
+        val email: String? = activity?.getemail()
+        val no_hp: String? = activity?.getno_hp()
+        val alamat: String? = activity?.getalamat()
         btnCapture.setOnClickListener{
-            this@AbsenFragment.startActivity(Intent(context, CameraActivity::class.java))
+            val i = Intent(context, CameraActivity::class.java)
+            i.putExtra("nip",nip)
+            i.putExtra("nama",nama)
+            i.putExtra("posisi",posisi)
+            i.putExtra("gender",gender)
+            i.putExtra("ttl",ttl)
+            i.putExtra("email",email)
+            i.putExtra("no_hp",no_hp)
+            i.putExtra("alamat",alamat)
+            this@AbsenFragment.startActivity(i)
         }
         return root
     }

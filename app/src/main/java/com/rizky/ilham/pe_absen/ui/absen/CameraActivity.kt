@@ -1,16 +1,20 @@
 package com.rizky.ilham.pe_absen.ui.absen
 
 import android.Manifest
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.webkit.MimeTypeMap
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
@@ -21,11 +25,14 @@ import com.google.android.gms.location.LocationServices
 import com.rizky.ilham.pe_absen.R
 import kotlinx.android.synthetic.main.activity_camera.*
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
 import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
-import kotlin.math.log
 
 
 class CameraActivity : AppCompatActivity() {
@@ -38,27 +45,29 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
-    private val url = "http://10.0.50.130:5001"
+    private val url = "http://10.0.49.16:5001"
     private val POST = "POST"
+    lateinit var photo: Bitmap
+    lateinit var image_uri: Uri
+    lateinit var sourcefile: File
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
-        title = "KotlinApp"
+        title = "Absensi"
         if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA)
             == PackageManager.PERMISSION_DENIED)
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), cameraRequest)
         imageView = findViewById(R.id.imageView)
         val imagevalue: ImageView = imageView
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        val nip = intent.getStringExtra("nip");
         button.setOnClickListener {
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(cameraIntent,cameraRequest)
             getCurrentLocation()
-            startActivityForResult(cameraIntent, cameraRequest)
-
         }
         btn_kirim.setOnClickListener {
-
             sendRequest(
                 POST,
                 "apiabsen",
@@ -69,7 +78,7 @@ class CameraActivity : AppCompatActivity() {
                 nip,
                 latitude.toString(),
                 longitude.toString(),
-                imagevalue
+                applicationContext.filesDir.absolutePath.toString() + "/imagename.png"
             )
             this@CameraActivity.startActivity(
                 Intent(
@@ -135,11 +144,13 @@ class CameraActivity : AppCompatActivity() {
     }
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == cameraRequest) {
-            val photo: Bitmap = data?.extras?.get("data") as Bitmap
+        if (resultCode == requestCode) {
+            photo = data?.extras?.get("data") as Bitmap
+            sourcefile = data?.extras?.get("data") as File
             imageView.setImageBitmap(photo)
         }
     }
+
 
     private fun getCurrentLocation() {
         // checking location permission
@@ -151,7 +162,6 @@ class CameraActivity : AppCompatActivity() {
             return
         }
         fusedLocationClient.lastLocation
-
             .addOnSuccessListener { location ->
                 // getting the last known or current location
 
@@ -160,13 +170,14 @@ class CameraActivity : AppCompatActivity() {
                         radar.text = "kamu berada di area Rumah Sakit Harapan Anda, Silahkan Absen"
                         latitude = location.latitude
                         longitude = location.longitude
+                        btn_kirim.visibility = View.VISIBLE
                     }
                     else{
-                        radar.text = "kamu berada di luar area Rumah Sakit Harapan Anda. Tolong masuk lebih dalam ke area RUmah Sakit Harapan Anda"
+                        radar.text = "kamu berada di luar area Rumah Sakit Harapan Anda. Tolong masuk lebih dalam ke area Rumah Sakit Harapan Anda"
                     }
                 }
                 else{
-                    radar.text = "kamu berada di luar area Rumah Sakit Harapan Anda. Tolong masuk lebih dalam ke area RUmah Sakit Harapan Anda"
+                    radar.text = "kamu berada di luar area Rumah Sakit Harapan Anda. Tolong masuk lebih dalam ke area Rumah Sakit Harapan Anda"
                 }
             }
             .addOnFailureListener {
@@ -191,6 +202,14 @@ class CameraActivity : AppCompatActivity() {
             }
         }
     }
+    fun getMimeType(file: File): String? {
+        var type: String? = null
+        val extension = MimeTypeMap.getFileExtensionFromUrl(file.path)
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        }
+        return type
+    }
     private fun sendRequest(
         method: String,
         endpoin: String,
@@ -201,7 +220,7 @@ class CameraActivity : AppCompatActivity() {
         value1: String?,
         value2: String?,
         value3: String?,
-        imagevalue: ImageView,
+        imagevalue: String,
     ) {
         /* if url is of our get request, it should not have parameters according to our implementation.
          * But our post request should have 'name' parameter. */
@@ -212,18 +231,22 @@ class CameraActivity : AppCompatActivity() {
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS).build()
+        val file: File = filesDir
+        val requestFile =RequestBody.create("multipart/form-data".toMediaTypeOrNull(),file)
+        val requestFile2=RequestBody.create("image/*".toMediaTypeOrNull(),file)
+        val body = MultipartBody.Part.createFormData("profile_picture", file.name, requestFile2)
 
         /* If it is a post request, then we have to pass the parameters inside the request body*/request =
             if (method == POST) {
-                val formBody: RequestBody = FormBody.Builder()
-                    .add(nip!!, imagevalue.toString())
-                    .add(latitude!!, imagevalue.toString())
-                    .add(longitude!!, imagevalue.toString())
-                    .add(image!!, imagevalue.toString())
-                    .build()
+                val mimeType = getMimeType(sourcefile)
+                val fileName: String = "askda.jpg"
+                val requestBody: RequestBody =
+                    MultipartBody.Builder().setType(MultipartBody.FORM)
+                        .addFormDataPart(image!!, fileName,sourcefile.asRequestBody(mimeType?.toMediaTypeOrNull()))
+                        .build()
                 Request.Builder()
                     .url(fullURL)
-                    .post(formBody)
+                    .post(requestBody)
                     .build()
             } else {
                 //If it's our get request, it doen't require parameters, hence just sending with the url/
@@ -247,36 +270,44 @@ class CameraActivity : AppCompatActivity() {
                     // Run view-related code back on the main thread.
                     // Here we display the response message in our text view
 
+                    val nip: String? =  intent.getStringExtra("nip")
+                    val nama: String? = intent.getStringExtra("nama")
+                    val posisi: String? = intent.getStringExtra("posisi")
+                    val gender: String? =intent.getStringExtra("gender")
+                    val ttl: String? =intent.getStringExtra("ttl")
+                    val email: String? = intent.getStringExtra("email")
+                    val no_hp: String? =intent.getStringExtra("no_hp")
+                    val alamat: String? = intent.getStringExtra("alamat")
                     if (Jobject["msg"].toString()== "kamu absen tepat waktu") {
 
                         var i = Intent(
                             this@CameraActivity as Context, AbsenSukses::class.java
                         )
                         i.putExtra("msg",Jobject["msg"].toString())
+                        i.putExtra("nip",nip)
+                        i.putExtra("nama",nama)
+                        i.putExtra("posisi",posisi)
+                        i.putExtra("gender",gender)
+                        i.putExtra("ttl",ttl)
+                        i.putExtra("email",email)
+                        i.putExtra("no_hp",no_hp)
+                        i.putExtra("alamat",alamat)
                         this@CameraActivity.startActivity(i)
                         this@CameraActivity.finish()
-                    } else if (Jobject["msg"].toString()== "kamu terlambat") {
-
+                    }
+                    else{
                         var i = Intent(
                             this@CameraActivity as Context, AbsenGagal::class.java
                         )
                         i.putExtra("msg",Jobject["msg"].toString())
-                        this@CameraActivity.startActivity(i)
-                        this@CameraActivity.finish()
-                    }else if (Jobject["msg"].toString()== "kamu absen terlalu cepat") {
-
-                        var i = Intent(
-                            this@CameraActivity as Context, AbsenGagal::class.java
-                        )
-                        i.putExtra("msg",Jobject["msg"].toString())
-                        this@CameraActivity.startActivity(i)
-                        this@CameraActivity.finish()
-                    }else if (Jobject["msg"].toString()== "maaf kamu sudah absen") {
-
-                        var i = Intent(
-                            this@CameraActivity as Context, AbsenGagal::class.java
-                        )
-                        i.putExtra("msg",Jobject["msg"].toString())
+                        i.putExtra("nip",nip)
+                        i.putExtra("nama",nama)
+                        i.putExtra("posisi",posisi)
+                        i.putExtra("gender",gender)
+                        i.putExtra("ttl",ttl)
+                        i.putExtra("email",email)
+                        i.putExtra("no_hp",no_hp)
+                        i.putExtra("alamat",alamat)
                         this@CameraActivity.startActivity(i)
                         this@CameraActivity.finish()
                     }

@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Login Pe-ABSEN"
+                android:text="Login e-Attendance"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -46,21 +46,22 @@
                 android:layout_marginEnd="16dp"
                 android:ems="10"
                 android:hint="NIP"
+                android:padding="8dp"
+                android:background="@drawable/edit_text"
                 android:inputType="text"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-
-
             <EditText
                 android:id="@+id/pswd"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:ems="10"
+                android:padding="8dp"
+                android:background="@drawable/edit_text"
                 android:hint="Password"
                 android:inputType="textPassword"
                 app:layout_constraintEnd_toEndOf="@+id/nip"
