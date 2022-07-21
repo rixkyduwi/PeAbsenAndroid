@@ -15,6 +15,7 @@ import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class Dashboard : AppCompatActivity() {
@@ -57,9 +58,9 @@ class Dashboard : AppCompatActivity() {
         val gender = intent.getStringExtra("gender");
         return gender
     }
-    fun getttl(): String? {
-        val ttl = intent.getStringExtra("ttl");
-        return ttl
+    fun getttl(): String {
+        val ttl = intent.getStringExtra("ttl")
+        return ttl.toString()
     }
     fun getemail(): String? {
         val email = intent.getStringExtra("email");

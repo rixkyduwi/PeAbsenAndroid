@@ -4,6 +4,9 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     app:cardBackgroundColor="@color/grey">
 <LinearLayout
     android:layout_width="match_parent"
@@ -12,41 +15,45 @@
     android:orientation="horizontal"
     android:paddingStart="8sp"
     android:paddingEnd="8sp"
+    android:focusableInTouchMode="true"
     android:paddingHorizontal="100sp"
     android:gravity="center"
+    android:clickable="true"
     android:layout_marginBottom="10dp"
-    >
-    <LinearLayout
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="30dp">
+    android:focusable="true">
     <TextView
         android:id="@+id/tanggal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="08/07/2022"
         android:fontFamily="@font/popins"
-        android:textColor="@color/black"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="30dp">
+        android:textColor="@color/black"
+        android:layout_marginEnd="28dp"/>
+
     <TextView
         android:id="@+id/waktu"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="08:00"
         android:fontFamily="@font/popins"
-        android:textColor="@color/black"/>
-    </LinearLayout>
+        android:textColor="@color/black"
+        android:layout_marginEnd="28dp"/>
+
     <LinearLayout
         android:id="@+id/backgroundstatus"
-        android:layout_width="100dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:paddingStart="5dp">
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center">
     <TextView
         android:id="@+id/status"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tidak Telat"

@@ -159,9 +159,13 @@ class CameraActivity : AppCompatActivity() {
                         "com.example.android.fileprovider",
                         it
                     )
+                    val a = Uri.parse(photoURI.toString())
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
+                    imageView.setImageURI(a)
                 }
+
+
             }
         }
     }
@@ -170,6 +174,7 @@ class CameraActivity : AppCompatActivity() {
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+
         return File.createTempFile(
             "JPEG_${timeStamp}_", /* prefix */
             ".jpg", /* suffix */
@@ -177,6 +182,7 @@ class CameraActivity : AppCompatActivity() {
         ).apply {
             // Save a file: path for use with ACTION_VIEW intents
             currentPhotoPath = absolutePath
+
         }
     }
 

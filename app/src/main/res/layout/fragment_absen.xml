@@ -32,16 +32,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Pastikan Anda Menggunakan Wifi
-        Internal - Harapan Anda
-        Pastikan GPS menyala
-        Pastikan fingerprint Scanner berfungsi dengan baik
-        Pastikan Camera depan Berfungsi dengan baik
-        Apabila Sudah Maka Klik Tombol ABSEN"/>
+        android:text="Pastikan Anda Menggunakan Wifi Internal - Harapan Anda, Pastikan GPS menyala Tolong foto menggunakan Camera depan. izinkan permintaan akses lokasi,kamera dan penyimpanan juga. Apabila Sudah Maka Klik Tombol ABSEN"/>
     <Button
         android:id="@+id/btn_absen"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/popins"
+        android:background="@drawable/btn_logout"
         android:text="Absen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

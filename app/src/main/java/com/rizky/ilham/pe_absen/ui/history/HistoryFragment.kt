@@ -10,12 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rizky.ilham.pe_absen.Dashboard
 import com.rizky.ilham.pe_absen.databinding.FragmentHistoryBinding
-import kotlinx.android.synthetic.main.activity_dashboard.*
-import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.IOException
-import java.util.concurrent.TimeUnit
 
 
 class HistoryFragment : Fragment(){
@@ -41,8 +37,14 @@ class HistoryFragment : Fragment(){
 
         val datahistory = ArrayList<DetailHistory>()
         for (i in 0 until data?.length()!!) {
-            val history = JSONObject(data[i].toString())
-            datahistory.add(DetailHistory(history["tanggal"].toString(), history["waktu"].toString(),history["status"].toString()))
+            if (i<=13){
+                val history = JSONObject(data[i].toString())
+                datahistory.add(DetailHistory(history["tanggal"].toString(), history["waktu"].toString(),history["status"].toString()))
+            }
+            else{
+                null
+            }
+
         }
         val adapter = HistoryAdapter(datahistory)
         binding.recycleviewhistory.adapter= adapter

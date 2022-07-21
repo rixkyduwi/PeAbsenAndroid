@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.rizky.ilham.pe_absen.Dashboard
 import com.rizky.ilham.pe_absen.databinding.FragmentAbsenBinding
+import java.util.*
+
 class AbsenFragment : Fragment() {
 
     private var _binding: FragmentAbsenBinding? = null
@@ -40,7 +42,7 @@ class AbsenFragment : Fragment() {
         val nama: String? = activity?.getnama()
         val posisi: String? = activity?.getposisi()
         val gender: String? = activity?.getgender()
-        val ttl: String? = activity?.getttl()
+        val ttl: String = activity!!.getttl()
         val email: String? = activity?.getemail()
         val no_hp: String? = activity?.getno_hp()
         val alamat: String? = activity?.getalamat()

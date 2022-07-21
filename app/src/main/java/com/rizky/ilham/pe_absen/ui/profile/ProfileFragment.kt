@@ -1,5 +1,6 @@
 package com.rizky.ilham.pe_absen.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.rizky.ilham.pe_absen.Dashboard
+import com.rizky.ilham.pe_absen.Login
 import com.rizky.ilham.pe_absen.databinding.FragmentProfileBinding
 import kotlinx.android.synthetic.main.activity_camera.view.*
 
@@ -36,8 +38,8 @@ class ProfileFragment : Fragment() {
         val nama: String? = activity?.getnama()
         val posisi: String? = activity?.getposisi()
         val gender: String? = activity?.getgender()
-        val ttl: String? = activity?.getttl()
-        val email: String? = activity?.getemail()
+        val ttl: String = activity!!.getttl()
+        val email: String? = activity.getemail()
         val no_hp: String? = activity?.getno_hp()
         val alamat: String? = activity?.getalamat()
             binding.profileNip.text = "NIP : "+nip
@@ -52,6 +54,22 @@ class ProfileFragment : Fragment() {
         val textView: TextView = binding.textProfile
         profileViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
+        }
+        binding.profileEdit.setOnClickListener {
+            val intent = Intent(context, EditProfile::class.java)
+            intent.putExtra("nip",nip)
+            intent.putExtra("nama",nama)
+            intent.putExtra("posisi",posisi)
+            intent.putExtra("gender",gender)
+            intent.putExtra("ttl",ttl)
+            intent.putExtra("email",email)
+            intent.putExtra("no_hp",no_hp)
+            intent.putExtra("alamat",alamat)
+            startActivity(intent)
+        }
+        binding.profileLogout.setOnClickListener {
+            val intent = Intent(context, Login::class.java)
+            startActivity(intent)
         }
         return root
     }

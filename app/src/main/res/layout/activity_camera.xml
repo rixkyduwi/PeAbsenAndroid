@@ -30,8 +30,10 @@
         />
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/popins"
+        android:background="@drawable/btn_logout"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="Take a Photo"
@@ -42,8 +44,10 @@
 
     <Button
         android:id="@+id/btn_kirim"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/popins"
+        android:background="@drawable/btn_logout"
         android:text="kirim"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

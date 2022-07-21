@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class AbsenViewModel: ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "Prasayarat sebelum Absen : "
+        value = "Syarat sebelum Absen : "
     }
     val text: LiveData<String> = _text
 }
