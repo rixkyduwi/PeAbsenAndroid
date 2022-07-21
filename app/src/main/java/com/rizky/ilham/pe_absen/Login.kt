@@ -13,7 +13,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class Login : AppCompatActivity() {
-    private val url = "http://10.0.50.231:5001"
+    private val url = "http://10.0.51.62:5001"
     private val POST = "POST"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,7 @@ class Login : AppCompatActivity() {
 
     private fun sendRequest(
         method: String,
-        endpoin: String,
+        endpoint: String,
         nip: String?,
         password: String?,
         value1: String?,
@@ -63,7 +63,7 @@ class Login : AppCompatActivity() {
         val respon: TextView = findViewById<View>(R.id.responlogin) as TextView
         /* if url is of our get request, it should not have parameters according to our implementation.
          * But our post request should have 'name' parameter. */
-        val fullURL = "$url/$endpoin"
+        val fullURL = "$url/$endpoint"
         val request: Request
 
         val client: OkHttpClient = OkHttpClient().newBuilder()
@@ -88,7 +88,8 @@ class Login : AppCompatActivity() {
                     .build()
             }
 
-        /* this is how the callback get handled */client.newCall(request)
+        /* this is how the callback get handled */
+        client.newCall(request)
             .enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     e.printStackTrace()

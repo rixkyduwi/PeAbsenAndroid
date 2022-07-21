@@ -47,7 +47,7 @@ class CameraActivity : AppCompatActivity() {
     //private lateinit var executor: Executor
     //private lateinit var biometricPrompt: BiometricPrompt
     //private lateinit var promptInfo: BiometricPrompt.PromptInfo
-    private val url = "http://10.0.50.231:5001"
+    private val url = "http://10.0.51.62:5001"
     private val POST = "POST"
     lateinit var photoFile: File
     val REQUEST_TAKE_PHOTO = 1
@@ -241,7 +241,7 @@ class CameraActivity : AppCompatActivity() {
     }
     private fun sendRequest(
         method: String,
-        endpoin: String,
+        endpoint: String,
         nip: String?,
         latitude: String?,
         longitude: String?,
@@ -254,7 +254,7 @@ class CameraActivity : AppCompatActivity() {
     ) {
         /* if url is of our get request, it should not have parameters according to our implementation.
          * But our post request should have 'name' parameter. */
-        val fullURL = "$url/$endpoin"
+        val fullURL = "$url/$endpoint"
         val request: Request
 
         val client: OkHttpClient = OkHttpClient().newBuilder()

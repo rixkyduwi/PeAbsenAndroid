@@ -68,6 +68,7 @@
         android:name=".ui.absen.AbsenGagal"
         android:exported="true">
         </activity>
+
     </application>
 
 </manifest>
