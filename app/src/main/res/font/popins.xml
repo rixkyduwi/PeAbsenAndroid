@@ -5,5 +5,4 @@
     app:fontProviderPackage="com.google.android.gms"
     app:fontProviderQuery="name=Poppins&amp;weight=800"
     app:fontProviderCerts="@array/com_google_android_gms_fonts_certs">
-
 </font-family>

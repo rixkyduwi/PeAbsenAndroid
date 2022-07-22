@@ -5,7 +5,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.absen.CameraActivity">
+    tools:context=".ui.absen.Absen">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:layout_marginTop="5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="Absen hadir / Pulang Sesuai Jadwal Shift !!"
+        />
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
@@ -24,6 +36,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintBottom_toBottomOf="@id/btn_finger"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="25dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/button"
         android:text=""
@@ -36,7 +49,7 @@
         android:background="@drawable/btn_logout"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Take a Photo"
+        android:text="Take a Selfie"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

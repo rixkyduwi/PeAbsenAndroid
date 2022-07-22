@@ -1,7 +1,7 @@
 package com.rizky.ilham.pe_absen
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.JsonReader
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -15,21 +15,23 @@ import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class Dashboard : AppCompatActivity() {
-    private val url = "http://10.0.51.62:5001"
+    private val url = "http://10.0.51.86:5001"
     private val POST = "POST"
+    val endpointabsen = "api/karyawan/history/absen"
+    val endpointpulang = "api/karyawan/history/pulang"
     private lateinit var binding: ActivityDashboardBinding
-    val endpoint = "api/karyawan/history"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         val nip = intent.getStringExtra("nip");
-        val a :TextView= binding.history
-        sendRequest(POST,endpoint,"nip",nip.toString(),a)
+        val historyabsen :TextView= binding.historyabsen
+        val historypulang :TextView= binding.historypulang
         setContentView(binding.root)
+        sendRequest(POST,endpointabsen,"nip",nip.toString(),historyabsen)
+        sendRequest(POST,endpointpulang,"nip",nip.toString(),historypulang)
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_dashboard)
         // Passing each menu ID as a set of Ids because each
@@ -58,9 +60,9 @@ class Dashboard : AppCompatActivity() {
         val gender = intent.getStringExtra("gender");
         return gender
     }
-    fun getttl(): String {
+    fun getttl(): String? {
         val ttl = intent.getStringExtra("ttl")
-        return ttl.toString()
+        return ttl
     }
     fun getemail(): String? {
         val email = intent.getStringExtra("email");
@@ -74,11 +76,14 @@ class Dashboard : AppCompatActivity() {
         val alamat = intent.getStringExtra("alamat");
         return alamat
     }
-    fun gethistory(): JSONArray {
-        val nip = intent.getStringExtra("nip");
-        val endpoint = "api/karyawan/history"
-        sendRequest(POST,endpoint,"nip",nip.toString(),history)
-        val history: TextView = findViewById<View>(R.id.history) as TextView
+    fun getabsen(): JSONArray {
+        val history: TextView =findViewById(R.id.historyabsen)
+        println(history.text.toString())
+        val Jobject = JSONObject(history.text.toString())
+        return Jobject.getJSONArray("data")
+    }
+    fun getpulang(): JSONArray {
+        val history: TextView = findViewById(R.id.historypulang)
         println(history.text.toString())
         val Jobject = JSONObject(history.text.toString())
         return Jobject.getJSONArray("data")
@@ -128,17 +133,10 @@ class Dashboard : AppCompatActivity() {
 
                     // Read data on the worker thread
                     val jsonData: String = response.body!!.string()
-                    val Jobject = JSONObject(jsonData)
                     // Run view-related code back on the main thread.
                     // Here we display the response message in our text view
-                    if (Jobject["msg"].toString()== "get history sukses") {
                         this@Dashboard.runOnUiThread {
                             history.text = jsonData
-                        }
-                    } else {
-                        this@Dashboard.runOnUiThread {
-                                history.text =Jobject["msg"].toString()
-                            }
                         }
                     }
                 })

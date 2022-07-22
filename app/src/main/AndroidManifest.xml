@@ -57,7 +57,7 @@
             android:name=".Dashboard"
             android:exported="false"/>
         <activity
-            android:name=".ui.absen.CameraActivity"
+            android:name=".ui.absen.Absen"
             android:exported="true">
         </activity>
         <activity
@@ -74,6 +74,10 @@
         </activity>
         <activity
             android:name=".ui.profile.SaveSukses"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".ui.absen.AbsenPulang"
             android:exported="true">
         </activity>
 

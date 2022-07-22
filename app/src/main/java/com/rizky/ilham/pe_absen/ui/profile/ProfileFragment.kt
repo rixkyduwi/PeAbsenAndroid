@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.rizky.ilham.pe_absen.Dashboard
 import com.rizky.ilham.pe_absen.Login
 import com.rizky.ilham.pe_absen.databinding.FragmentProfileBinding
-import kotlinx.android.synthetic.main.activity_camera.view.*
 
 class ProfileFragment : Fragment() {
 
@@ -32,14 +31,13 @@ class ProfileFragment : Fragment() {
             ViewModelProvider(this).get(ProfileViewModel::class.java)
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        imageView = binding.avatar.imageView
         val activity: Dashboard? = activity as Dashboard?
         val nip: String? = activity?.getnip()
         val nama: String? = activity?.getnama()
         val posisi: String? = activity?.getposisi()
         val gender: String? = activity?.getgender()
-        val ttl: String = activity!!.getttl()
-        val email: String? = activity.getemail()
+        val ttl: String? = activity?.getttl()
+        val email: String? = activity?.getemail()
         val no_hp: String? = activity?.getno_hp()
         val alamat: String? = activity?.getalamat()
             binding.profileNip.text = "NIP : "+nip

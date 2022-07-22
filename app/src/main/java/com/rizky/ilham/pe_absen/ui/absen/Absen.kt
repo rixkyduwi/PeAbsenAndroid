@@ -4,40 +4,34 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
 import android.webkit.MimeTypeMap
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.biometric.BiometricPrompt
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import androidx.core.content.FileProvider.getUriForFile
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rizky.ilham.pe_absen.R
-import kotlinx.android.synthetic.main.activity_camera.*
+import kotlinx.android.synthetic.main.activity_absen.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
-import java.security.AccessController.getContext
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
 
-class CameraActivity : AppCompatActivity() {
+class Absen : AppCompatActivity() {
     private val cameraRequest = 1888
     lateinit var imageView: ImageView
     private val LOCATION_PERMISSION_REQ_CODE = 1000;
@@ -47,14 +41,14 @@ class CameraActivity : AppCompatActivity() {
     //private lateinit var executor: Executor
     //private lateinit var biometricPrompt: BiometricPrompt
     //private lateinit var promptInfo: BiometricPrompt.PromptInfo
-    private val url = "http://10.0.51.62:5001"
+    private val url = "http://10.0.51.86:5001"
     private val POST = "POST"
     lateinit var photoFile: File
     val REQUEST_TAKE_PHOTO = 1
     lateinit var currentPhotoPath: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_camera)
+        setContentView(R.layout.activity_absen)
         title = "Absensi"
         if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA)
             == PackageManager.PERMISSION_DENIED)
@@ -200,8 +194,8 @@ class CameraActivity : AppCompatActivity() {
             .addOnSuccessListener { location ->
                 // getting the last known or current location
 
-                if ((location.latitude <= -6.875141 ) && (location.latitude>= -6.876490)){
-                    if((location.longitude>=109.127974 ) && (location.longitude<= 109.129314)){
+                if ((location.latitude <= -6.875141 ) && (location.latitude >= -6.876490)){
+                    if((location.longitude >= 109.127974 ) && (location.longitude <= 109.129314)){
                         radar.text = "kamu berada di area Rumah Sakit Harapan Anda, Silahkan Absen"
                         latitude = location.latitude
                         longitude = location.longitude
@@ -310,9 +304,10 @@ class CameraActivity : AppCompatActivity() {
                     if (Jobject["msg"].toString()== "kamu absen tepat waktu") {
 
                         val i = Intent(
-                            this@CameraActivity as Context, AbsenSukses::class.java
+                            this@Absen as Context, AbsenSukses::class.java
                         )
-                        i.putExtra("msg",Jobject["msg"].toString())
+                        i.putExtra("tanggal",Jobject["tanggal"].toString())
+                        i.putExtra("waktu",Jobject["waktu"].toString())
                         i.putExtra("nip",nip)
                         i.putExtra("nama",nama)
                         i.putExtra("posisi",posisi)
@@ -321,12 +316,12 @@ class CameraActivity : AppCompatActivity() {
                         i.putExtra("email",email)
                         i.putExtra("no_hp",no_hp)
                         i.putExtra("alamat",alamat)
-                        this@CameraActivity.startActivity(i)
-                        this@CameraActivity.finish()
+                        this@Absen.startActivity(i)
+                        this@Absen.finish()
                     }
                     else{
                         val i = Intent(
-                            this@CameraActivity as Context, AbsenGagal::class.java
+                            this@Absen as Context, AbsenGagal::class.java
                         )
                         i.putExtra("msg",Jobject["msg"].toString())
                         i.putExtra("nip",nip)
@@ -337,8 +332,8 @@ class CameraActivity : AppCompatActivity() {
                         i.putExtra("email",email)
                         i.putExtra("no_hp",no_hp)
                         i.putExtra("alamat",alamat)
-                        this@CameraActivity.startActivity(i)
-                        this@CameraActivity.finish()
+                        this@Absen.startActivity(i)
+                        this@Absen.finish()
                     }
                 }
             })

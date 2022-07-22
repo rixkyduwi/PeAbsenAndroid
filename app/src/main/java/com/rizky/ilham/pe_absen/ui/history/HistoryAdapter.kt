@@ -32,13 +32,17 @@ class HistoryAdapter(private val mList: List<DetailHistory>) : RecyclerView.Adap
         holder.tanggal.text = ItemsViewModel.tanggal
         // sets the text to the textview from our itemHolder class
         holder.waktu.text = ItemsViewModel.waktu
-        if (ItemsViewModel.status == "telat"){
+        if (ItemsViewModel.status == "tepat waktu"){
             holder.status.text = ItemsViewModel.status
-            holder.backgroundstatus.setBackgroundResource(R.color.red)
+            holder.backgroundstatus.setBackgroundResource(R.color.greenlight)
+        }
+        else if (ItemsViewModel.status == "lembur?"){
+            holder.status.text = ItemsViewModel.status
+            holder.backgroundstatus.setBackgroundResource(R.color.yellow)
         }
         else{
             holder.status.text = ItemsViewModel.status
-            holder.backgroundstatus.setBackgroundResource(R.color.greenlight)
+            holder.backgroundstatus.setBackgroundResource(R.color.red)
         }
     }
 

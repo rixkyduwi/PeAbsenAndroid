@@ -17,12 +17,11 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
-        android:layout_height="480dp"
+        android:layout_height="520dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         app:cardCornerRadius="16dp"
         android:paddingBottom="100dp"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,10 +49,10 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
+                android:id="@+id/list_hist"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="400dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="40dp"
                 android:layout_marginEnd="10dp"
                 android:background="@color/grey"
                 android:orientation="vertical"
@@ -61,8 +60,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_history"
-                tools:listitem="@layout/list_history">
+                app:layout_constraintTop_toTopOf="@+id/text_history"
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -108,10 +107,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/grey">
-
                 </androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>
-
+        <Button
+            android:id="@+id/historyswitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="history pulang"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/list_hist"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

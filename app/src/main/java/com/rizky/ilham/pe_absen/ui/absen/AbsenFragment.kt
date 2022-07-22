@@ -36,18 +36,31 @@ class AbsenFragment : Fragment() {
             textView.text = it
         }
 
-        val btnCapture : Button= binding.btnAbsen
+        val btnAbsen : Button= binding.btnAbsen
+        val btnPulang : Button= binding.btnPulang
         val activity: Dashboard? = activity as Dashboard?
         val nip: String? = activity?.getnip()
         val nama: String? = activity?.getnama()
         val posisi: String? = activity?.getposisi()
         val gender: String? = activity?.getgender()
-        val ttl: String = activity!!.getttl()
+        val ttl: String? = activity?.getttl()
         val email: String? = activity?.getemail()
         val no_hp: String? = activity?.getno_hp()
         val alamat: String? = activity?.getalamat()
-        btnCapture.setOnClickListener{
-            val i = Intent(context, CameraActivity::class.java)
+        btnAbsen.setOnClickListener{
+            val i = Intent(context, Absen::class.java)
+            i.putExtra("nip",nip)
+            i.putExtra("nama",nama)
+            i.putExtra("posisi",posisi)
+            i.putExtra("gender",gender)
+            i.putExtra("ttl",ttl)
+            i.putExtra("email",email)
+            i.putExtra("no_hp",no_hp)
+            i.putExtra("alamat",alamat)
+            this@AbsenFragment.startActivity(i)
+        }
+        btnPulang.setOnClickListener{
+            val i = Intent(context, AbsenPulang::class.java)
             i.putExtra("nip",nip)
             i.putExtra("nama",nama)
             i.putExtra("posisi",posisi)

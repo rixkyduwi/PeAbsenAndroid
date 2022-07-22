@@ -13,7 +13,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class Login : AppCompatActivity() {
-    private val url = "http://10.0.51.62:5001"
+    private val url = "http://10.0.51.86:5001"
     private val POST = "POST"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

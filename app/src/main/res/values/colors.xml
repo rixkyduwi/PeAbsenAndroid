@@ -14,5 +14,6 @@
     <color name="greenlight">#20F01C</color>
     <color name="greendark">#06923A</color>
     <color name="red">#E92121</color>
+    <color name="yellow">#ffff00</color>
 
 </resources>
