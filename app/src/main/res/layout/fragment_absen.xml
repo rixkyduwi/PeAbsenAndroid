@@ -15,11 +15,29 @@
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@id/btn_absen"
+        app:layout_constraintBottom_toTopOf="@id/text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@id/btn_absen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="Pastikan Anda Menggunakan Wifi
+        Internal - Harapan Anda
+        Pastikan GPS menyala
+        Pastikan fingerprint Scanner berfungsi dengan baik
+        Pastikan Camera depan Berfungsi dengan baik
+        Apabila Sudah Maka Klik Tombol ABSEN"/>
     <Button
         android:id="@+id/btn_absen"
         android:layout_width="wrap_content"

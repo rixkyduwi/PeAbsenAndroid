@@ -26,18 +26,17 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:paddingBottom="10dp">
-
             <ImageView
-                android:id="@+id/tandacentang"
+                android:id="@+id/tandasilang"
                 android:layout_width="450px"
                 android:layout_height="500px"
-                android:src="@drawable/tandacentang"
-                app:layout_constraintBottom_toTopOf="@id/textsukses"
+                android:src="@drawable/tandasilang"
+                app:layout_constraintBottom_toTopOf="@id/textgagal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
             <TextView
-                android:id="@+id/textsukses"
+                android:id="@+id/textgagal"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,7 +48,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tandacentang"
+                app:layout_constraintTop_toBottomOf="@id/tandasilang"
                 app:layout_constraintBottom_toBottomOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

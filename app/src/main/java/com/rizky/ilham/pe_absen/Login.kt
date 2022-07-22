@@ -7,12 +7,14 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.rizky.ilham.pe_absen.ui.absen.AbsenSukses
 import okhttp3.*
+import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class Login : AppCompatActivity() {
-    private val url = "http://10.0.50.241:5001"
+    private val url = "http://10.0.50.130:5001"
     private val POST = "POST"
     private val PUT = "PUT"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +40,7 @@ class Login : AppCompatActivity() {
                 //if name text is not empty,then call the function to make the post request/
                 sendRequest(
                     POST,
-                    "apilogin",
+                    "api/login/karyawan",
                     "nip",
                     "password",
                     txtnip,
@@ -90,27 +92,36 @@ class Login : AppCompatActivity() {
                     e.printStackTrace()
                     this@Login.runOnUiThread { respon.text = "api tidak merespon" }
                 }
-
                 override fun onResponse(call: Call, response: Response) {
 
                     // Read data on the worker thread
-                    val responseData: String = response.body!!.string()
+                    val jsonData: String = response.body!!.string()
+                    val Jobject = JSONObject(jsonData)
                     // Run view-related code back on the main thread.
                     // Here we display the response message in our text view
-                    this@Login.runOnUiThread { respon.text = responseData }
-                    if (responseData == "login berhasil") {
+                    if (Jobject["msg"].toString()== "login berhasil") {
                         this@Login.runOnUiThread { respon.text = "" }
+                        val data = Jobject.getJSONArray("data")
+                        val datalogin = JSONObject(data[0].toString())
 
-                        this@Login.startActivity(
-                            Intent(
-                                this@Login as Context, LoginSukses::class.java
-                            )
+                        var i = Intent(
+                            this@Login as Context, AbsenSukses::class.java
                         )
+                        i.putExtra("nip",datalogin["nip"].toString())
+                        i.putExtra("nama",datalogin["nama"].toString())
+                        i.putExtra("posisi",datalogin["posisi"].toString())
+                        i.putExtra("gender",datalogin["gender"].toString())
+                        i.putExtra("ttl",datalogin["ttl"].toString())
+                        i.putExtra("email",datalogin["email"].toString())
+                        i.putExtra("no_hp",datalogin["no_hp"].toString())
+                        i.putExtra("alamat",datalogin["alamat"].toString())
+                        this@Login.startActivity(i)
                         this@Login.finish()
                     } else {
-                        this@Login.runOnUiThread { respon.text = responseData }
+                            this@Login.runOnUiThread { respon.text =Jobject["msg"].toString()}
                     }
                 }
             })
     }
+
 }
