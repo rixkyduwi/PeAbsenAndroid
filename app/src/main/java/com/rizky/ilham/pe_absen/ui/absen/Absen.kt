@@ -1,10 +1,12 @@
 package com.rizky.ilham.pe_absen.ui.absen
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -12,6 +14,7 @@ import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -19,6 +22,9 @@ import androidx.core.content.FileProvider.getUriForFile
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rizky.ilham.pe_absen.R
+import com.rizky.ilham.pe_absen.api.POST
+import com.rizky.ilham.pe_absen.api.endpointabsen
+import com.rizky.ilham.pe_absen.api.url
 import kotlinx.android.synthetic.main.activity_absen.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -41,15 +47,13 @@ class Absen : AppCompatActivity() {
     //private lateinit var executor: Executor
     //private lateinit var biometricPrompt: BiometricPrompt
     //private lateinit var promptInfo: BiometricPrompt.PromptInfo
-    private val url = "http://10.0.51.86:5001"
-    private val POST = "POST"
     lateinit var photoFile: File
     val REQUEST_TAKE_PHOTO = 1
     lateinit var currentPhotoPath: String
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_absen)
-        title = "Absensi"
         if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.CAMERA)
             == PackageManager.PERMISSION_DENIED)
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), cameraRequest)
@@ -58,6 +62,9 @@ class Absen : AppCompatActivity() {
         val nip = intent.getStringExtra("nip");
         button.setOnClickListener {
             dispatchTakePictureIntent()
+            val a = requireNotNull(photoFile).toString()
+            val bitmap : Bitmap= BitmapFactory.decodeFile(a)
+            imageView.setImageBitmap(bitmap)
             getCurrentLocation()
         }
         btn_kirim.setOnClickListener {
@@ -65,7 +72,7 @@ class Absen : AppCompatActivity() {
             val fileName: String = photoFile.toString()
             sendRequest(
                 POST,
-                "apiabsen",
+                endpointabsen,
                 "nip",
                 "latitude",
                 "longitude",
@@ -150,15 +157,13 @@ class Absen : AppCompatActivity() {
                 photoFile?.also {
                     val photoURI: Uri = getUriForFile(
                         this,
-                        "com.example.android.fileprovider",
+                        "com.rizky.ilham.pe_absen",
                         it
                     )
-                    val a = Uri.parse(photoURI.toString())
+
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                     startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
-                    imageView.setImageURI(a)
                 }
-
 
             }
         }
@@ -166,7 +171,7 @@ class Absen : AppCompatActivity() {
     @Throws(IOException::class)
     private fun createImageFile(): File {
         // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmm").format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
         return File.createTempFile(
@@ -176,11 +181,12 @@ class Absen : AppCompatActivity() {
         ).apply {
             // Save a file: path for use with ACTION_VIEW intents
             currentPhotoPath = absolutePath
-
         }
+
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun getCurrentLocation() {
         // checking location permission
         if (ActivityCompat.checkSelfPermission(this,
@@ -193,20 +199,35 @@ class Absen : AppCompatActivity() {
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
                 // getting the last known or current location
-
-                if ((location.latitude <= -6.875141 ) && (location.latitude >= -6.876490)){
-                    if((location.longitude >= 109.127974 ) && (location.longitude <= 109.129314)){
-                        radar.text = "kamu berada di area Rumah Sakit Harapan Anda, Silahkan Absen"
-                        latitude = location.latitude
-                        longitude = location.longitude
-                        btn_kirim.visibility = View.VISIBLE
-                    }
-                    else{
-                        radar.text = "kamu berada di luar area Rumah Sakit Harapan Anda. Tolong masuk lebih dalam ke area Rumah Sakit Harapan Anda"
+                println(location.accuracy)
+                if (!location.isMock) {
+                    if (location.accuracy <= 2) {
+                        if ((location.latitude <= -6.875141) && (location.latitude >= -6.876490)) {
+                            if ((location.longitude >= 109.127974) && (location.longitude <= 109.129314)) {
+                                radar.text =
+                                    "kamu berada di area Rumah Sakit Harapan Anda, Silahkan Absen"
+                                latitude = location.latitude
+                                longitude = location.longitude
+                                btn_kirim.visibility = View.VISIBLE
+                            } else {
+                                radar.text =
+                                    "kamu berada di luar area Rumah Sakit Harapan Anda. Tolong masuk lebih dalam ke area Rumah Sakit Harapan Anda"
+                            }
+                        } else {
+                            radar.text =
+                                "kamu berada di luar area Rumah Sakit Harapan Anda. Tolong masuk lebih dalam ke area Rumah Sakit Harapan Anda"
+                        }
+                    } else if (location.accuracy <= 10) {
+                        radar.text =
+                            "kamu berada 10 meter di luar area. silahkan masuk lebih dalam"
+                    } else if (location.accuracy <= 20) {
+                        radar.text =
+                            "kamu berada 20 meter di luar area. silahkan masuk lebih dalam"
                     }
                 }
-                else{
-                    radar.text = "kamu berada di luar area Rumah Sakit Harapan Anda. Tolong masuk lebih dalam ke area Rumah Sakit Harapan Anda"
+                    else{
+                    radar.text =
+                        "Terdeteksi menggunakan fake gps."
                 }
             }
             .addOnFailureListener {
@@ -302,9 +323,8 @@ class Absen : AppCompatActivity() {
                     val no_hp: String? =intent.getStringExtra("no_hp")
                     val alamat: String? = intent.getStringExtra("alamat")
                     if (Jobject["msg"].toString()== "kamu absen tepat waktu") {
-
                         val i = Intent(
-                            this@Absen as Context, AbsenSukses::class.java
+                            this@Absen , AbsenSukses::class.java
                         )
                         i.putExtra("tanggal",Jobject["tanggal"].toString())
                         i.putExtra("waktu",Jobject["waktu"].toString())
@@ -316,12 +336,12 @@ class Absen : AppCompatActivity() {
                         i.putExtra("email",email)
                         i.putExtra("no_hp",no_hp)
                         i.putExtra("alamat",alamat)
-                        this@Absen.startActivity(i)
-                        this@Absen.finish()
+                        startActivity(i)
+                        finish()
                     }
                     else{
                         val i = Intent(
-                            this@Absen as Context, AbsenGagal::class.java
+                            this@Absen, AbsenGagal::class.java
                         )
                         i.putExtra("msg",Jobject["msg"].toString())
                         i.putExtra("nip",nip)
@@ -332,8 +352,8 @@ class Absen : AppCompatActivity() {
                         i.putExtra("email",email)
                         i.putExtra("no_hp",no_hp)
                         i.putExtra("alamat",alamat)
-                        this@Absen.startActivity(i)
-                        this@Absen.finish()
+                        startActivity(i)
+                        finish()
                     }
                 }
             })

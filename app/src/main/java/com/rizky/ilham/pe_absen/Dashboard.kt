@@ -9,6 +9,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.rizky.ilham.pe_absen.api.*
 import com.rizky.ilham.pe_absen.databinding.ActivityDashboardBinding
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import okhttp3.*
@@ -18,10 +19,6 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class Dashboard : AppCompatActivity() {
-    private val url = "http://10.0.51.86:5001"
-    private val POST = "POST"
-    val endpointabsen = "api/karyawan/history/absen"
-    val endpointpulang = "api/karyawan/history/pulang"
     private lateinit var binding: ActivityDashboardBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +27,8 @@ class Dashboard : AppCompatActivity() {
         val historyabsen :TextView= binding.historyabsen
         val historypulang :TextView= binding.historypulang
         setContentView(binding.root)
-        sendRequest(POST,endpointabsen,"nip",nip.toString(),historyabsen)
-        sendRequest(POST,endpointpulang,"nip",nip.toString(),historypulang)
+        sendRequest(POST, endpoint_h_absen,"nip",nip.toString(),historyabsen)
+        sendRequest(POST, endpoint_h_pulang,"nip",nip.toString(),historypulang)
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_dashboard)
         // Passing each menu ID as a set of Ids because each
@@ -95,7 +92,6 @@ class Dashboard : AppCompatActivity() {
         value1: String?,
         history: TextView
     ) {
-        val h:String = history.text.toString()
         val fullURL = "$url/$endpoint"
         val request: Request
         val client: OkHttpClient = OkHttpClient().newBuilder()

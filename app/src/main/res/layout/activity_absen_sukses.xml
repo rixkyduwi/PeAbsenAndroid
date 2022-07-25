@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login"
+    tools:context=".ui.absen.AbsenSukses"
     android:background="@color/coklatkekuningan">
 
     <androidx.cardview.widget.CardView
@@ -29,14 +29,15 @@
 
             <ImageView
                 android:id="@+id/tandacentang"
-                android:layout_width="450px"
-                android:layout_height="500px"
+                android:layout_width="400px"
+                android:layout_height="400px"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/tandacentang"
-                app:layout_constraintBottom_toTopOf="@id/textsukses"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
             <TextView
+                android:layout_marginTop="10dp"
                 android:id="@+id/text1"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -46,6 +47,7 @@
                 android:fontFamily="@font/popins"
                 android:textColor="@color/coklatkekuningan"
                 android:textStyle="bold"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tandacentang"
@@ -69,7 +71,7 @@
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Behasil absen pada tanggal : 2022-07-06 "
+                android:text="Berhasil absen pada tanggal : 2022-07-06 "
                 android:fontFamily="@font/popins"
                 android:textColor="@color/coklatkekuningan"
                 android:textSize="15sp"
@@ -77,22 +79,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textwaktu"
                 app:layout_constraintBottom_toBottomOf="parent"/>
-            <TextView
-                android:id="@+id/textsukses"
-                android:visibility="invisible"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="ABSEN SUKSES"
-                android:fontFamily="@font/popins"
-                android:textColor="@color/coklatkekuningan"
-                android:textSize="54sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tandacentang"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

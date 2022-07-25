@@ -16,7 +16,6 @@ class AbsenSukses : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_absen_sukses)
-        val image :ImageView= findViewById(R.id.tandacentang)
         val nip = intent.getStringExtra("nip");
         val nama = intent.getStringExtra("nama");
         val posisi = intent.getStringExtra("posisi");
@@ -31,7 +30,7 @@ class AbsenSukses : AppCompatActivity() {
         textwaktu.text = waktu
         Handler(Looper.getMainLooper()).postDelayed({
             val i = Intent(
-                this@AbsenSukses as Context, Dashboard::class.java
+                this , Dashboard::class.java
             )
             i.putExtra("nip", nip)
             i.putExtra("nama", nama)
@@ -41,7 +40,7 @@ class AbsenSukses : AppCompatActivity() {
             i.putExtra("email", email)
             i.putExtra("no_hp", no_hp)
             i.putExtra("alamat", alamat)
-            this@AbsenSukses.startActivity(i)
+            startActivity(i)
             finish()
         }, 3000L)
     }

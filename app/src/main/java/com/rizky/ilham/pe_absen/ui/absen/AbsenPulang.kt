@@ -19,6 +19,9 @@ import androidx.core.content.FileProvider.getUriForFile
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rizky.ilham.pe_absen.R
+import com.rizky.ilham.pe_absen.api.POST
+import com.rizky.ilham.pe_absen.api.endpointpulang
+import com.rizky.ilham.pe_absen.api.url
 import kotlinx.android.synthetic.main.activity_absen.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -41,8 +44,6 @@ class AbsenPulang : AppCompatActivity() {
     //private lateinit var executor: Executor
     //private lateinit var biometricPrompt: BiometricPrompt
     //private lateinit var promptInfo: BiometricPrompt.PromptInfo
-    private val url = "http://10.0.51.86:5001"
-    private val POST = "POST"
     lateinit var photoFile: File
     val REQUEST_TAKE_PHOTO = 1
     lateinit var currentPhotoPath: String
@@ -57,14 +58,15 @@ class AbsenPulang : AppCompatActivity() {
         val nip = intent.getStringExtra("nip");
         button.setOnClickListener {
             dispatchTakePictureIntent()
+            finishAfterTransition()
             getCurrentLocation()
         }
         btn_kirim.setOnClickListener {
-            val mimeType = photoFile?.let { getMimeType(it) }
+            val mimeType = getMimeType(photoFile)
             val fileName: String = photoFile.toString()
             sendRequest(
                 POST,
-                "apipulang",
+                endpointpulang,
                 "nip",
                 "latitude",
                 "longitude",
@@ -137,6 +139,7 @@ class AbsenPulang : AppCompatActivity() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             // Ensure that there's a camera activity to handle the intent
             takePictureIntent.resolveActivity(packageManager)?.also {
+
                 // Create the File where the photo should go
                 photoFile = try {
                     createImageFile()
@@ -303,7 +306,7 @@ class AbsenPulang : AppCompatActivity() {
                     if (Jobject["msg"].toString()== "kamu absen tepat waktu") {
 
                         val i = Intent(
-                            this@AbsenPulang as Context, AbsenSukses::class.java
+                            this@AbsenPulang , AbsenSukses::class.java
                         )
                         i.putExtra("msg",Jobject["msg"].toString())
                         i.putExtra("nip",nip)
@@ -314,12 +317,12 @@ class AbsenPulang : AppCompatActivity() {
                         i.putExtra("email",email)
                         i.putExtra("no_hp",no_hp)
                         i.putExtra("alamat",alamat)
-                        this@AbsenPulang.startActivity(i)
-                        this@AbsenPulang.finish()
+                        startActivity(i)
+                        finish()
                     }
                     else{
                         val i = Intent(
-                            this@AbsenPulang as Context, AbsenGagal::class.java
+                            this@AbsenPulang, AbsenGagal::class.java
                         )
                         i.putExtra("msg",Jobject["msg"].toString())
                         i.putExtra("nip",nip)
@@ -330,8 +333,8 @@ class AbsenPulang : AppCompatActivity() {
                         i.putExtra("email",email)
                         i.putExtra("no_hp",no_hp)
                         i.putExtra("alamat",alamat)
-                        this@AbsenPulang.startActivity(i)
-                        this@AbsenPulang.finish()
+                        startActivity(i)
+                        finish()
                     }
                 }
             })

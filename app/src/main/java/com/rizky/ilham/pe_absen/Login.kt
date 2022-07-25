@@ -7,14 +7,16 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.rizky.ilham.pe_absen.api.POST
+import com.rizky.ilham.pe_absen.api.endpointlogin
+import com.rizky.ilham.pe_absen.api.url
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class Login : AppCompatActivity() {
-    private val url = "http://10.0.51.86:5001"
-    private val POST = "POST"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_login)
@@ -42,7 +44,7 @@ class Login : AppCompatActivity() {
                 //if name text is not empty,then call the function to make the post request/
                 sendRequest(
                     POST,
-                    "api/login/karyawan",
+                    endpointlogin,
                     "nip",
                     "password",
                     txtnip,

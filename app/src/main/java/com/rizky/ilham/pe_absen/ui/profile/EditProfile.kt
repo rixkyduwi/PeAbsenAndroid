@@ -10,6 +10,9 @@ import androidx.core.text.set
 import com.rizky.ilham.pe_absen.Dashboard
 import com.rizky.ilham.pe_absen.LoginSukses
 import com.rizky.ilham.pe_absen.R
+import com.rizky.ilham.pe_absen.api.POST
+import com.rizky.ilham.pe_absen.api.endpointedit
+import com.rizky.ilham.pe_absen.api.url
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
@@ -19,8 +22,6 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class EditProfile :AppCompatActivity(){
-    private val url = "http://10.0.51.86:5001"
-    private val POST = "POST"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_edit_profile)
@@ -47,7 +48,7 @@ class EditProfile :AppCompatActivity(){
             val et_alamat=et_profile_alamat.text.toString()
             sendRequest(
                 POST,
-                "api/karyawan/update_profile",
+                endpointedit,
                 "nip",
                 "old_pswd",
                 "new_pswd",
