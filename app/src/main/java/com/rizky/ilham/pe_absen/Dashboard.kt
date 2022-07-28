@@ -1,8 +1,6 @@
 package com.rizky.ilham.pe_absen
 
 import android.os.Bundle
-import android.util.JsonReader
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -12,10 +10,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rizky.ilham.pe_absen.api.*
 import com.rizky.ilham.pe_absen.databinding.ActivityDashboardBinding
 import kotlinx.android.synthetic.main.activity_dashboard.*
+import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import java.net.URLConnection
 import java.util.concurrent.TimeUnit
 
 class Dashboard : AppCompatActivity() {
@@ -23,12 +25,12 @@ class Dashboard : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(layoutInflater)
-        val nip = intent.getStringExtra("nip");
         val historyabsen :TextView= binding.historyabsen
         val historypulang :TextView= binding.historypulang
         setContentView(binding.root)
-        sendRequest(POST, endpoint_h_absen,"nip",nip.toString(),historyabsen)
-        sendRequest(POST, endpoint_h_pulang,"nip",nip.toString(),historypulang)
+        val nip = intent.getStringExtra("nip").toString()
+        sendRequest(POST, endpoint_h_absen,"nip",nip,historyabsen)
+        sendRequest(POST, endpoint_h_pulang,"nip",nip,historypulang)
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_dashboard)
         // Passing each menu ID as a set of Ids because each
@@ -42,19 +44,19 @@ class Dashboard : AppCompatActivity() {
     }
 
     fun getnip(): String? {
-        val nip = intent.getStringExtra("nip");
+        val nip = intent.getStringExtra("nip")
         return nip
     }
     fun getnama(): String? {
-        val nama = intent.getStringExtra("nama");
+        val nama = intent.getStringExtra("nama")
         return nama
     }
     fun getposisi(): String? {
-        val posisi = intent.getStringExtra("posisi");
+        val posisi = intent.getStringExtra("posisi")
         return posisi
     }
     fun getgender(): String? {
-        val gender = intent.getStringExtra("gender");
+        val gender = intent.getStringExtra("gender")
         return gender
     }
     fun getttl(): String? {
@@ -62,15 +64,15 @@ class Dashboard : AppCompatActivity() {
         return ttl
     }
     fun getemail(): String? {
-        val email = intent.getStringExtra("email");
+        val email = intent.getStringExtra("email")
         return email
     }
     fun getno_hp(): String? {
-        val no_hp = intent.getStringExtra("no_hp");
+        val no_hp = intent.getStringExtra("no_hp")
         return no_hp
     }
     fun getalamat(): String? {
-        val alamat = intent.getStringExtra("alamat");
+        val alamat = intent.getStringExtra("alamat")
         return alamat
     }
     fun getabsen(): JSONArray {
@@ -92,13 +94,16 @@ class Dashboard : AppCompatActivity() {
         value1: String?,
         history: TextView
     ) {
-        val fullURL = "$url/$endpoint"
+        val url = URL(url)
+        val ucon: HttpURLConnection = url.openConnection() as HttpURLConnection
+        ucon.setInstanceFollowRedirects(false)
+        val secondURL = URL(ucon.getHeaderField("Location"))
+        val fullURL = "$secondURL/$endpoint"
         val request: Request
         val client: OkHttpClient = OkHttpClient().newBuilder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS).build()
-
         /* If it is a post request, then we have to pass the parameters inside the request body*/request =
             if (method == POST) {
                 val formBody: RequestBody = FormBody.Builder()

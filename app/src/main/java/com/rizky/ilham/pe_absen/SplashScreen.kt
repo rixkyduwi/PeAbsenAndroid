@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.rizky.ilham.pe_absen.ui.absen.AbsenGagal
-import com.rizky.ilham.pe_absen.ui.absen.AbsenSukses
 
 
 class SplashScreen : AppCompatActivity() {

@@ -61,7 +61,7 @@
             android:exported="true">
         </activity>
         <activity
-            android:name=".ui.absen.AbsenSukses"
+            android:name=".ui.absen.AbsenResponse"
             android:exported="true">
         </activity>
         <activity

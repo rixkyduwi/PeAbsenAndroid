@@ -31,38 +31,30 @@ class ProfileFragment : Fragment() {
             ViewModelProvider(this)[ProfileViewModel::class.java]
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val activity: Dashboard? = activity as Dashboard?
-        val nip: String? = activity?.getnip()
-        val nama: String? = activity?.getnama()
-        val posisi: String? = activity?.getposisi()
-        val gender: String? = activity?.getgender()
-        val ttl: String? = activity?.getttl()
-        val email: String? = activity?.getemail()
-        val no_hp: String? = activity?.getno_hp()
-        val alamat: String? = activity?.getalamat()
-            binding.profileNip.text = "NIP : "+nip
-            binding.profileNama.text = "Nama : "+nama
+        val activity: Dashboard? = activity as Dashboard
+            binding.profileNip.text = "NIP : "+activity?.getnip()
+            binding.profileNama.text = "Nama : "+activity?.getnama()
             binding.profilePswd.text = "Password : ********"
-            binding.profilePosisi.text = "Posisi : "+posisi
-            binding.profileGender.text = "Gender : "+gender
-            binding.profileTtl.text = "Tanggal Lahir : "+ttl
-            binding.profileEmail.text = "Email : "+email
-            binding.profileNoHp.text = "No Hp : "+no_hp
-            binding.profileAlamat.text = "Alamat : "+alamat
+            binding.profilePosisi.text = "Posisi : "+activity?.getposisi()
+            binding.profileGender.text = "Gender : "+activity?.getgender()
+            binding.profileTtl.text = "Tanggal Lahir : "+activity?.getttl()
+            binding.profileEmail.text = "Email : "+activity?.getemail()
+            binding.profileNoHp.text = "No Hp : "+activity?.getno_hp()
+            binding.profileAlamat.text = "Alamat : "+activity?.getalamat()
         val textView: TextView = binding.textProfile
         profileViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         binding.profileEdit.setOnClickListener {
             val intent = Intent(context, EditProfile::class.java)
-            intent.putExtra("nip",nip)
-            intent.putExtra("nama",nama)
-            intent.putExtra("posisi",posisi)
-            intent.putExtra("gender",gender)
-            intent.putExtra("ttl",ttl)
-            intent.putExtra("email",email)
-            intent.putExtra("no_hp",no_hp)
-            intent.putExtra("alamat",alamat)
+            intent.putExtra("nip",activity?.getnip())
+            intent.putExtra("nama",activity?.getnama())
+            intent.putExtra("posisi",activity?.getposisi())
+            intent.putExtra("gender",activity?.getgender())
+            intent.putExtra("ttl",activity?.getttl())
+            intent.putExtra("email",activity?.getemail())
+            intent.putExtra("no_hp",activity?.getno_hp())
+            intent.putExtra("alamat",activity?.getalamat())
             startActivity(intent)
         }
         binding.profileLogout.setOnClickListener {

@@ -11,8 +11,11 @@ import com.rizky.ilham.pe_absen.api.POST
 import com.rizky.ilham.pe_absen.api.endpointlogin
 import com.rizky.ilham.pe_absen.api.url
 import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.json.JSONObject
 import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.concurrent.TimeUnit
 
 class Login : AppCompatActivity() {
@@ -62,10 +65,15 @@ class Login : AppCompatActivity() {
         value1: String?,
         value2: String?,
     ) {
+        val baseurl = URL(url)
+        val ucon: HttpURLConnection = baseurl.openConnection() as HttpURLConnection
+        ucon.instanceFollowRedirects = false
+        val secondURL = ucon.getHeaderField("Location").toString()
+        val fullURL = "$secondURL/$endpoint"
+
         val respon: TextView = findViewById<View>(R.id.responlogin) as TextView
         /* if url is of our get request, it should not have parameters according to our implementation.
          * But our post request should have 'name' parameter. */
-        val fullURL = "$url/$endpoint"
         val request: Request
 
         val client: OkHttpClient = OkHttpClient().newBuilder()
